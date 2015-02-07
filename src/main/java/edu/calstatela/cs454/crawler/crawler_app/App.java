@@ -1,18 +1,15 @@
 package edu.calstatela.cs454.crawler.crawler_app;
 
-/**
- * Hello world!
- *
- */
+import java.util.ArrayList;
+
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello Shreyas" );
-        System.out.println( "Hello Akshay" );
-        System.out.println( "Hello" );
-        System.out.println( "Hello Akshay" );
-        System.out.println("Test");
-        System.out.println("Gaurav");
+    	Crawler objcrawlCrawler=new Crawler("http://en.wikipedia.org/wiki/George_W._Bush");
+    	/*ArrayList<String> lststr=objcrawlCrawler.getCawling();
+    	for(String s :lststr)
+    	System.out.println(s);*/
+    	objcrawlCrawler.getMetadata();
     }
 }
