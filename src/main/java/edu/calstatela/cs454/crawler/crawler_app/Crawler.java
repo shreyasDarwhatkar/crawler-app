@@ -1,10 +1,13 @@
 package edu.calstatela.cs454.crawler.crawler_app;
+import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.poi.extractor.ExtractorFactory;
 import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.HttpHeaders;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -16,10 +19,14 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.html.HtmlParser;
 import org.xml.sax.SAXException;
+
+import com.sun.syndication.feed.atom.Link;
 public class Crawler {
 	String url;
 
@@ -32,11 +39,29 @@ public class Crawler {
 	{
 		ArrayList<String> lsturl = new ArrayList<String>();
 		try {
+			String temp="";
 			URL customUrl = new URL(this.url);
 			BufferedReader br = new BufferedReader(new InputStreamReader(customUrl.openStream()));
-			while(br.readLine()!=null)
-				lsturl.add(br.readLine());
+			while((temp=br.readLine())!=null)
+			{
+				//System.out.println(temp);
+			org.apache.tika.sax.Link link=new org.apache.tika.sax.Link(null,temp, null,null);
+			//System.out.println(link.getUri());
+			if (link.getUri().contains("<a "))
+			{
+				System.out.println(link.getUri());
+			}
+			
+			/* BodyContentHandler contenthandler=new BodyContentHandler();
+			    Metadata metadata=new Metadata();
+			    ParseContext context=new ParseContext();
+			    Parser tikaParser=new AutoDetectParser();;
+				//tikaParser.parse(temp,contenthandler,metadata,context);
+			    System.out.println(metadata.get(HttpHeaders.CONTENT_TYPE));
+			}*/
+			
 		} 
+		}
 		catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -46,7 +71,7 @@ public class Crawler {
 	
 	public void getMetadata()
 	{
-		File file=new File("306ea58.jpg");
+		File file=new File("test.txt");
 	      //Parser method parameters
 	      try {
 			Parser parser = new AutoDetectParser();
@@ -80,5 +105,6 @@ public class Crawler {
 			e.printStackTrace();
 		}
 	}
+	
 	
 }
