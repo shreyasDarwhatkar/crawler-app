@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import org.apache.poi.hssf.record.ObjRecord;
 import org.slf4j.LoggerFactory;
 
 public class App 
@@ -17,13 +18,9 @@ public class App
 			try {
 				//URL name=new URL("http://www.calstatela.edu/");
 				Crawler objcrawlCrawler=new Crawler();
+				objcrawlCrawler.Dname=objcrawlCrawler.getDomainName(name);
 				objcrawlCrawler.getCawling(name);
-				
-				/*Crawler objcrawlCrawler=new Crawler("http://www.calstatela.edu/");
-				ArrayList<String> lststr=objcrawlCrawler.getCawling();
-				for(String s :lststr)
-				System.out.println(s);
-				objcrawlCrawler.getMetadata();*/
+				objcrawlCrawler.printUrl();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
