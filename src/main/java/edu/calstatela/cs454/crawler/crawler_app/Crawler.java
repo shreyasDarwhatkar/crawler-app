@@ -3,8 +3,6 @@ package edu.calstatela.cs454.crawler.crawler_app;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
-
-import org.bouncycastle.util.encoders.UrlBase64;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -60,10 +58,12 @@ public class Crawler {
 				Document doc = Jsoup.connect(URL.toString()).get();
 				//System.out.println(URL);
 				//count++;
-				//System.out.println(URL);
+				System.out.println(URL);
 				Elements questions = doc.select("a[href]");
-				Elements links = doc.head().getElementsByAttribute("property");
-				//System.out.println(links.get(1));
+				
+				for(Element meta : doc.select("meta")) {
+				    System.out.println("Name: " + meta.attr("name") + " - Content: " + meta.attr("content"));
+				}
 				for (Element link : questions) {
 						getCawling(link.attr("abs:href"));
 				}
