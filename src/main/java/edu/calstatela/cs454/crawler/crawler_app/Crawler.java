@@ -1,110 +1,87 @@
 package edu.calstatela.cs454.crawler.crawler_app;
-import java.awt.List;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
-import org.apache.poi.extractor.ExtractorFactory;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.HttpHeaders;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.sax.BodyContentHandler;
-
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Queue;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.html.HtmlParser;
-import org.xml.sax.SAXException;
+import javax.swing.text.html.HTMLDocument.Iterator;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import com.sun.syndication.feed.atom.Link;
+
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+
 public class Crawler {
+
 	String url;
+	int count = 0;
 
 	public Crawler(String url) {
 		super();
 		this.url = url;
+
 	}
-	
-	ArrayList<String> getCawling()
-	{
-		ArrayList<String> lsturl = new ArrayList<String>();
+
+	public Crawler() {
+		super();
+	}
+
+	void getCawling(String URL) {
 		try {
-			String temp="";
-			URL customUrl = new URL(this.url);
-			BufferedReader br = new BufferedReader(new InputStreamReader(customUrl.openStream()));
-			while((temp=br.readLine())!=null)
-			{
-				//System.out.println(temp);
-			org.apache.tika.sax.Link link=new org.apache.tika.sax.Link(null,temp, null,null);
-			//System.out.println(link.getUri());
-			if (link.getUri().contains("<a "))
-			{
-				System.out.println(link.getUri());
-			}
-			
-			/* BodyContentHandler contenthandler=new BodyContentHandler();
-			    Metadata metadata=new Metadata();
-			    ParseContext context=new ParseContext();
-			    Parser tikaParser=new AutoDetectParser();;
-				//tikaParser.parse(temp,contenthandler,metadata,context);
-			    System.out.println(metadata.get(HttpHeaders.CONTENT_TYPE));
-			}*/
-			
-		} 
+		if(count==10)
+			return;
+		Document doc = Jsoup.connect(URL.toString()).get();
+		System.out.println(URL);
+		count++;
+			//System.out.println(URL);
+		Elements questions = doc.select("a[href]");
+		Elements links = doc.head().getElementsByAttribute("property");
+		//System.out.println(links.get(1));
+		for(Element link: questions){
+			if(link.attr("href").contains("calstatela.edu"))
+				getCawling(link.attr("abs:href"));
 		}
-		catch (Exception e) {
-			// TODO: handle exception
-		}
-		return lsturl;
 		
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
-	
-	public void getMetadata()
-	{
-		File file=new File("test.txt");
-	      //Parser method parameters
-	      try {
-			Parser parser = new AutoDetectParser();
-			  BodyContentHandler handler = new BodyContentHandler();
-			  Metadata metadata = new Metadata();
-			  FileInputStream inputstream = new FileInputStream(file);
-			  ParseContext context = new ParseContext();
-			  
-			  parser.parse(inputstream, handler, metadata, context);
-			  System.out.println(handler.toString());
-
-			  //getting the list of all meta data elements 
-			  String[] metadataNames = metadata.names();
 		
+	
+	/*try {
+		String crawlStorageFolder ="F:\\Shreyas\\MS Study\\SearchEngineOptimization";
+		int numberOfCrawlers = 1;
 
-			  for(String name : metadataNames) {		        
-			     System.out.println(name + ": " + metadata.get(name));
-			  }
-			 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TikaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		CrawlConfig config = new CrawlConfig();
+		config.setCrawlStorageFolder(crawlStorageFolder);
+		config.setMaxDepthOfCrawling(2);
+		config.setIncludeBinaryContentInCrawling(false);
+		
+		PageFetcher pageFetcher = new PageFetcher(config);
+		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+		controller.addSeed("http://www.ics.uci.edu/~lopes/");
+        controller.addSeed("http://www.ics.uci.edu/~welling/");
+        controller.addSeed("http://www.ics.uci.edu/");
+
+		 controller.start(MyCrawler.class, numberOfCrawlers);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
-	
-	
+*/	    
+
+	}
 }
