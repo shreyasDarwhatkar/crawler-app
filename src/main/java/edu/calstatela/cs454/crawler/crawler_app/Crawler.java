@@ -1,8 +1,16 @@
 package edu.calstatela.cs454.crawler.crawler_app;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.HashSet;
+import java.util.UUID;
+
+import javax.net.ssl.SSLHandshakeException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,24 +35,40 @@ public class Crawler {
 	public String getDomainName(String paramUrl)
 	{
 		String DomainName="";
-		if(!paramUrl.isEmpty())
-		{
-			int idx=paramUrl.indexOf(".");
-			DomainName=paramUrl.substring(idx+1, paramUrl.length());
-			if(DomainName.indexOf("/")!=-1)
-			{
-				DomainName=DomainName.substring(0,DomainName.length()-1);
-			//DomainName.replace('/', ' ');	
+		try {
+			int idx = 0;
+			if (!paramUrl.isEmpty()) {
+				idx = paramUrl.indexOf(".");
+				if (idx > 0)
+					DomainName = paramUrl.substring(idx + 1, paramUrl.length());
+				if (DomainName.indexOf("/") != -1) {
+					DomainName = DomainName.substring(0,
+							DomainName.length() - 1);
+					//DomainName.replace('/', ' ');	
+				}
+
 			}
-			
+		} catch (Exception e) {
+			System.out.println("Exception "+DomainName);
 		}
-		
-		
 		return DomainName.trim();
 	}
 	HashSet<String> LinksSet = new HashSet<String>();
-	void getCawling(String URL) {
+	UUID uuid = null;
+	void getCawling(String URL) throws SSLHandshakeException {
 		try {
+			uuid=UUID.randomUUID();
+			if(URL.toLowerCase().contains(".pdf"))
+			{
+				System.out.println("PDF "+URL.toLowerCase());
+			URL website = new URL(URL);
+			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+			FileOutputStream fos = new FileOutputStream(".\\CrawlerStorage\\"+uuid.toString()+".pdf");
+			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+			return;
+			}
+			if(count>2)
+				return;
 			
 			if (LinksSet.contains(URL)) {
 				return;
@@ -66,7 +90,9 @@ public class Crawler {
 				}
 				for (Element link : questions) {
 						getCawling(link.attr("abs:href"));
+						
 				}
+				count++;
 			}
 		//printUrl(LinksSet);
 	} catch (IOException e) {
@@ -75,7 +101,7 @@ public class Crawler {
 	} catch (URISyntaxException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}	
+	}
 	
 	}
 	

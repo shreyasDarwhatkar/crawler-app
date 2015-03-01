@@ -7,17 +7,15 @@ public class App
     public static void main( String[] args )
     {
     	String name="http://www.calstatela.edu/";
-    	
 			try {
 				//URL name=new URL("http://www.calstatela.edu/");
 				Crawler objcrawlCrawler=new Crawler();
-				objcrawlCrawler.Dname=objcrawlCrawler.getDomainName("http://www.mit.edu/");
-				objcrawlCrawler.getCawling("http://www.mit.edu/");
+				objcrawlCrawler.Dname=objcrawlCrawler.getDomainName(name);
+				objcrawlCrawler.getCawling(name);
 				//objcrawlCrawler.printUrl();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				// TODO Auto-generated catch block 
 				e.printStackTrace();
-			}
-		
+			}		
     }
 }
