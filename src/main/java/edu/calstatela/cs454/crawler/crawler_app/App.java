@@ -6,7 +6,7 @@ public class App
 	//private static final Logger logger = (Logger) LoggerFactory.getLogger(Crawler.class);
     public static void main( String[] args )
     {
-    	String name="http://www.calstatela.edu/";
+    	String name="http://ocean.pcwerk.com/~jtran/search/a.html";
 			try {
 				//URL name=new URL("http://www.calstatela.edu/");
 				Crawler objcrawlCrawler=new Crawler();
